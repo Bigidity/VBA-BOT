@@ -1,9 +1,8 @@
 require("dotenv").config();
 import express, { json } from 'express';
 import { setCookie } from "noblox.js";
-import axios from "axios";
 const app = express();
-import { Client, IntentsBitField, ActivityType, GuildEmoji, EmbedBuilder, Guild } from "discord.js";
+import { Client, IntentsBitField, ActivityType, EmbedBuilder } from "discord.js";
 
 const version = "1.1.0";
 const port = process.env.PORT;
