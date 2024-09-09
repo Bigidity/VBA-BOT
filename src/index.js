@@ -1,9 +1,9 @@
 require("dotenv").config();
-const express = require('express');
-const noblox = require("noblox.js");
-const axios = require("axios");
+import express, { json } from 'express';
+import { setCookie } from "noblox.js";
+import axios from "axios";
 const app = express();
-const {Client, IntentsBitField, ActivityType, GuildEmoji, EmbedBuilder, Guild} = require("discord.js");
+import { Client, IntentsBitField, ActivityType, GuildEmoji, EmbedBuilder, Guild } from "discord.js";
 
 const version = "1.1.0";
 const port = process.env.PORT;
@@ -27,7 +27,7 @@ function getRandomArbitrary(min, max) { // got it from StackOverflow
     return Math.random() * (max - min) + min;
 };
 
-app.use(express.json());
+app.use(json());
 
 client.on("ready", (c) =>{
     console.log(`😎👍 ${c.user.tag} is online!`)
@@ -60,7 +60,7 @@ client.on("ready", (c) =>{
 
 async function startApp() {
     try {
-        const currentUser = await noblox.setCookie(COOKIE);
+        const currentUser = await setCookie(COOKIE);
         console.log(`Logged in as ${currentUser.name}`);
     } catch (error) {
         console.error("Failed to start app:", error);
