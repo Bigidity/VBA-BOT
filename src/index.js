@@ -83,7 +83,7 @@ client.on("interactionCreate", async (interaction) => {
     
             interaction.reply({
                 content: `You flipped ${headOrTails}!`,
-                ephemeral: false,
+                ephemeral: false,    
             })
         };
     }else if (interaction.isButton()){
@@ -115,10 +115,12 @@ app.post('/rank', async (req, res) => {
 
         await channel.send({ embeds: [SuccesEmbed] });
   
+        await channel.send({ embeds: [FailEmbed] });
+
         return res.status(200).json({   
             success: true,
             message: `User ${userId} ranked to ${rankId} and notified on Discord.`
-        }, await channel.send({ embeds: [FailEmbed] }));
+        });
     } catch (error) {
         console.error('Error ranking player:', error);
         return res.status(400).json({
