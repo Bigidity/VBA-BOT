@@ -97,7 +97,8 @@ client.on("interactionCreate", async (interaction) => {
 
 app.post('/rank', async (req, res) => {
     const { userId, rankId, channelId } = req.body;
-
+    const channel = client.channels.cache.get(channelId);
+    
     try {
         const SuccesEmbed = new EmbedBuilder()
             .setColor(0x00FF00)
@@ -110,12 +111,9 @@ app.post('/rank', async (req, res) => {
             .setDescription(`UserId: ${userId} has failed to be promoted to RankId: ${rankId}`)
             .setTimestamp();
 
-        const channel = client.channels.cache.get(channelId);
         if (!channel) throw new Error('Channel not found');
 
         await channel.send({ embeds: [SuccesEmbed] });
-  
-        await channel.send({ embeds: [FailEmbed] });
 
         return res.status(200).json({   
             success: true,
@@ -123,6 +121,7 @@ app.post('/rank', async (req, res) => {
         });
     } catch (error) {
         console.error('Error ranking player:', error);
+        await channel.send({ embeds: [FailEmbed] });
         return res.status(400).json({
             success: false,
             message: error.message || 'An unexpected error occurred.'
