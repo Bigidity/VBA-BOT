@@ -9,8 +9,7 @@ const version = "1.1.0";
 const port = process.env.PORT;
 const GROUPID = process.env.GROUP_ID;
 const COOKIE = process.env.RBX_COOKIE;
-
-//console.log("RBX_COOKIE:", process.env.RBX_COOKIE);
+console.log(port,GROUPID,COOKIE)
 
 const client = new Client({
     intents: [
@@ -72,13 +71,13 @@ async function startApp() {
 client.on("interactionCreate", async (interaction) => {
     if (interaction.isChatInputCommand()){
         if (interaction.commandName === "coinflip") {
-            let result = Math.ceil(getRandomArbitrary(0,2))
+            let result = Math.round(getRandomArbitrary(0,2))
             let headOrTails = null
     
             if (result === 1) {
-                headOrTails = "Tails"
+                headOrTails = "Tails";
             } else if (result == 2){
-                headOrTails = "Heads"
+                headOrTails = "Heads";
             };
     
             interaction.reply({
