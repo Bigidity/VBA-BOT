@@ -1,9 +1,9 @@
 require("dotenv").config();
-const express = require('express');
-const noblox = require("noblox.js");
-const axios = require("axios");
+import express from 'express';
+import noblox from "noblox.js";
+import axios from "axios";
 const app = express();
-const {Client, IntentsBitField, ActivityType, GuildEmoji, EmbedBuilder, Guild, Embed, ActionRowBuilder, ButtonBuilder, ButtonStyle, Component} = require("discord.js");
+import { Client, IntentsBitField, ActivityType, GuildEmoji, EmbedBuilder, Guild, Embed, ActionRowBuilder, ButtonBuilder, ButtonStyle, Component } from "discord.js";
 
 const client = new Client({
     intents: [
