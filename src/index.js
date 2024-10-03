@@ -1,11 +1,8 @@
-// Load environment variables
-import 'dotenv/config';
-
 // Import modules
-import express, { json } from 'express';
-import noblox from 'noblox.js';
-import { Client, IntentsBitField, ActivityType, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
-import { REST, Routes } from 'discord.js';
+const express = require('express');
+const noblox = require("noblox.js");
+const axios = require("axios");
+const {Client, IntentsBitField, ActivityType, GuildEmoji, EmbedBuilder, Guild} = require("discord.js");
 
 // Express app
 const app = express();
