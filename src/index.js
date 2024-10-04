@@ -60,7 +60,7 @@ client.on("ready", (c) => {
     }, 10000);
 });
 
-// Coin flip interaction handler
+// interaction handler
 client.on("interactionCreate", async (interaction) => {
     if (interaction.isChatInputCommand()) {
         if (interaction.commandName === "coinflip") {
