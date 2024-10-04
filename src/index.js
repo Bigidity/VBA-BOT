@@ -24,7 +24,7 @@ const client = new Client({
 
 // vars
 const version = "1.1.0";
-let uptime = { y: 0, m: 0, d: 0, h: 0, s: 0 };
+const serverStartTime = Date.now();
 
 // Environment variables
 const port = process.env.PORT;
@@ -33,8 +33,6 @@ const COOKIE = process.env.RBX_COOKIE;
 const TOKEN = process.env.TOKEN;
 const CLIENT_ID = process.env.CLIENT_ID;
 const GUILD_ID = process.env.GUILD_ID;
-
-console.log(port, GROUPID, COOKIE);
 
 // Start the app and authenticate noblox.js
 async function startApp() {
@@ -47,31 +45,50 @@ async function startApp() {
     }
 }
 
-// Count the uptime
-function countUptime() {
-    const uptimeInSeconds = os.uptime(); // Get uptime in seconds
-    let seconds = uptimeInSeconds % 60;
-    let minutes = Math.floor((uptimeInSeconds / 60) % 60);
-    let hours = Math.floor((uptimeInSeconds / 3600) % 24);
-    let days = Math.floor((uptimeInSeconds / 86400) % 30); // Approximate month by 30 days
-    let months = Math.floor((uptimeInSeconds / (86400 * 30)) % 12);
-    let years = Math.floor(uptimeInSeconds / (86400 * 365)); // Approximate year by 365 days
+// Function to calculate the actual uptime
+function updateUptime() {
+    const now = Date.now();
+    const uptimeMs = now - serverStartTime; // Get uptime in milliseconds
 
-    uptime = { y: years, m: months, d: days, h: hours, s: seconds };
+    let seconds = Math.floor(uptimeMs / 1000); // Convert to seconds
+    let minutes = Math.floor(seconds / 60);
+    let hours = Math.floor(minutes / 60);
+    let days = Math.floor(hours / 24);
+    let months = Math.floor(days / 30.42); // Approximate month length
+    let years = Math.floor(months / 12);
+
+    // Remaining units after calculating months and years
+    seconds = seconds % 60;
+    minutes = minutes % 60;
+    hours = hours % 24;
+    days = Math.floor(days % 30.42); // Remaining days after months
+    months = months % 12; // Remaining months after years
+
+    // Update the uptime variable
+    uptime = {
+        y: years,
+        mo: months,  // months
+        d: days,
+        h: hours,
+        m: minutes,  // minutes
+        s: seconds
+    };
 }
 
+// Get a string with the formatted uptime
 function getUptimeString() {
     let parts = [];
 
     // Only add non-zero values to the parts array
     if (uptime.y > 0) parts.push(`${uptime.y}y`);
-    if (uptime.m > 0) parts.push(`${uptime.m}m`);
+    if (uptime.mo > 0) parts.push(`${uptime.mo}mo`);  // months
     if (uptime.d > 0) parts.push(`${uptime.d}d`);
     if (uptime.h > 0) parts.push(`${uptime.h}h`);
+    if (uptime.m > 0) parts.push(`${uptime.m}m`);  // minutes
     if (uptime.s > 0) parts.push(`${uptime.s}s`);
 
-    // Join the parts with spaces
-    return parts.length > 0 ? parts.join(' ') : '0s';  // If all are 0, return '0s'
+    // Join the parts with spaces, if all values are zero return '0s'
+    return parts.length > 0 ? parts.join(' ') : '0s';
 }
 
 // Set bot activity status
@@ -79,7 +96,7 @@ client.on("ready", (c) => {
     console.log(`😎👍 ${c.user.tag} is online!`);
 
     const status = [
-        { name: `Uptime: ${getUptimeString}`, type: ActivityType.Watching },
+        { name: `Uptime: ${(getUptimeString())}`, type: ActivityType.Watching },
         { name: "over Members 🕵️", type: ActivityType.Watching },
         { name: "over ROBLOX Group", type: ActivityType.Watching },
         { name: `Running on version: ${version} 😎`, type: ActivityType.Playing },
@@ -88,6 +105,7 @@ client.on("ready", (c) => {
 
     setInterval(() => {
         const random = Math.floor(Math.random() * status.length);
+        console.log(status[random])
         client.user.setActivity(status[random]);
     }, 10000);
 });
@@ -161,7 +179,7 @@ const rest = new REST({ version: "10" }).setToken(TOKEN);
 })();
 
 // Init
-setInterval(countUptime, 1000);
+setInterval(updateUptime, 1000); // Updates every second
 
 // Start
 
