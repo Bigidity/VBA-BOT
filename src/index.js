@@ -1,7 +1,10 @@
 // Import modules
+require('dotenv').config(); // enviorment file (DONT DEL)
 const express = require('express');
 const noblox = require("noblox.js");
-const {Client, IntentsBitField, ActivityType, GuildEmoji, EmbedBuilder, Guild} = require("discord.js");
+const { Client, IntentsBitField, ActivityType, EmbedBuilder } = require("discord.js");
+const { REST } = require('@discordjs/rest'); // Import REST from @discordjs/rest
+const { Routes } = require('discord-api-types/v10'); // Import Routes from discord-api-types
 
 // Express app
 const app = express();
@@ -65,6 +68,8 @@ client.on("interactionCreate", async (interaction) => {
             const headOrTails = result === 1 ? "Tails" : "Heads";
 
             interaction.reply({ content: `You flipped ${headOrTails}!`, ephemeral: false });
+        } else if (interaction.commandName === "version") {
+            interaction.reply({ content: `I am running on ${version}!`, ephemeral: false })
         }
     } else if (interaction.isButton()) {
         if (interaction.customId === "delete-reply-bot-notif-ranking") {
@@ -108,7 +113,7 @@ app.post('/rank', async (req, res) => {
 // Register slash commands
 const commands = [
     { name: "coinflip", description: "Flip a coin!" },
-    { name: "meme", description: "Replies with a random meme!" }
+    { name: "version", description: "Gives the current version I'm running on!" }
 ];
 
 const rest = new REST({ version: "10" }).setToken(TOKEN);
