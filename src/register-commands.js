@@ -1,4 +1,3 @@
-require("dotenv").config();
 import { REST, Routes } from "discord.js";
 
 const commands = [

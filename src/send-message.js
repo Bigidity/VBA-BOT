@@ -1,7 +1,5 @@
-require("dotenv").config();
 import express from 'express';
 import noblox from "noblox.js";
-import axios from "axios";
 const app = express();
 import { Client, IntentsBitField, ActivityType, GuildEmoji, EmbedBuilder, Guild, Embed, ActionRowBuilder, ButtonBuilder, ButtonStyle, Component } from "discord.js";
 

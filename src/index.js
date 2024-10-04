@@ -1,7 +1,6 @@
 // Import modules
 const express = require('express');
 const noblox = require("noblox.js");
-const axios = require("axios");
 const {Client, IntentsBitField, ActivityType, GuildEmoji, EmbedBuilder, Guild} = require("discord.js");
 
 // Express app
