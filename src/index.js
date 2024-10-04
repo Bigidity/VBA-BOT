@@ -21,8 +21,11 @@ const client = new Client({
     ]
 });
 
-// Environment variables
+// vars
 const version = "1.1.0";
+let uptime = { y: 0, m: 0, d: 0, h: 0, s: 0 };
+
+// Environment variables
 const port = process.env.PORT;
 const GROUPID = process.env.GROUP_ID;
 const COOKIE = process.env.RBX_COOKIE;
@@ -43,11 +46,39 @@ async function startApp() {
     }
 }
 
+// Count the uptime
+function countUptime() {
+    const uptimeInSeconds = os.uptime(); // Get uptime in seconds
+    let seconds = uptimeInSeconds % 60;
+    let minutes = Math.floor((uptimeInSeconds / 60) % 60);
+    let hours = Math.floor((uptimeInSeconds / 3600) % 24);
+    let days = Math.floor((uptimeInSeconds / 86400) % 30); // Approximate month by 30 days
+    let months = Math.floor((uptimeInSeconds / (86400 * 30)) % 12);
+    let years = Math.floor(uptimeInSeconds / (86400 * 365)); // Approximate year by 365 days
+
+    uptime = { y: years, m: months, d: days, h: hours, s: seconds };
+}
+
+function getUptimeString() {
+    let parts = [];
+
+    // Only add non-zero values to the parts array
+    if (uptime.y > 0) parts.push(`${uptime.y}y`);
+    if (uptime.m > 0) parts.push(`${uptime.m}m`);
+    if (uptime.d > 0) parts.push(`${uptime.d}d`);
+    if (uptime.h > 0) parts.push(`${uptime.h}h`);
+    if (uptime.s > 0) parts.push(`${uptime.s}s`);
+
+    // Join the parts with spaces
+    return parts.length > 0 ? parts.join(' ') : '0s';  // If all are 0, return '0s'
+}
+
 // Set bot activity status
 client.on("ready", (c) => {
     console.log(`😎👍 ${c.user.tag} is online!`);
 
     const status = [
+        { name: `Uptime: ${getUptimeString}`, type: ActivityType.Watching },
         { name: "over Members 🕵️", type: ActivityType.Watching },
         { name: "over ROBLOX Group", type: ActivityType.Watching },
         { name: `Running on version: ${version} 😎`, type: ActivityType.Playing },
@@ -127,6 +158,11 @@ const rest = new REST({ version: "10" }).setToken(TOKEN);
         console.error(`Error registering commands: ${error}`);
     }
 })();
+
+// Init
+setInterval(countUptime, 1000);
+
+// Start
 
 // Start the server
 app.listen(port, () => {
