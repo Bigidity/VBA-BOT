@@ -2,6 +2,7 @@
 require('dotenv').config(); // enviorment file (DONT DEL)
 const express = require('express');
 const noblox = require("noblox.js");
+const os = require('os');
 const { Client, IntentsBitField, ActivityType, EmbedBuilder } = require("discord.js");
 const { REST } = require('@discordjs/rest'); // Import REST from @discordjs/rest
 const { Routes } = require('discord-api-types/v10'); // Import Routes from discord-api-types
