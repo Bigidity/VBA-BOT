@@ -4,11 +4,9 @@ const noblox = require("noblox.js");
 const axios = require("axios");
 const {Client, IntentsBitField, ActivityType, GuildEmoji, EmbedBuilder, Guild} = require("discord.js");
 
-console.log("hello world");
-
 // Express app
 const app = express();
-app.use(json());
+app.use(express.json());
 
 // Discord client setup
 const client = new Client({
