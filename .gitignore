@@ -1,7 +1,4 @@
 node_modules
 package-lock.json
 package.json
-.env
 archive
-archive/send-message.js
-archive/register-commands.js
