@@ -23,7 +23,7 @@ const client = new Client({
 });
 
 /*/ vars /*/
-const version = "1.1.0";
+const version = "1.5.0";
 const serverStartTime = Date.now();
 let uptime = { y: 0, mo: 0, d: 0, h: 0, m: 0, s: 0 };
 
