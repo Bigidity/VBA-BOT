@@ -165,6 +165,7 @@ app.post('/rank', async (req, res) => {
             .setTimestamp();
 
         await channel.send({ embeds: [FailEmbed] });
+        console.error('Error ranking player:', error);
         return res.status(400).json({ success: false, message: error.message || 'An unexpected error occurred.' });
     }  
 });
