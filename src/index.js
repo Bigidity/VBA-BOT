@@ -136,12 +136,12 @@ client.on("interactionCreate", async (interaction) => {
 
 /*/ Rank POST request handler /*/
 app.post('/rank', async (req, res) => {
-    const { userId, rankId, channelId } = req.body;
+    const { userId, rankId } = req.body;
 
     // Log the incoming data for debugging
-    console.log('Received rank request:', { userId, rankId, channelId });
+    console.log('Received rank request:', { userId, rankId });
 
-    const channel = client.channels.cache.get(channelId);
+    const channel = client.channels.cache.get("1249787149184798751");
 
     try {
         if (!channel) throw new Error('Channel not found');
@@ -197,7 +197,7 @@ app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
 
-// Log in the Discord client
+// Log in the Discord client  
 client.login(TOKEN);
 
 // Start noblox app
