@@ -10,6 +10,7 @@ const { Routes } = require('discord-api-types/v10'); // Import Routes from disco
 /*/ Express app /*/
 const app = express();
 app.use(express.json());
+app.use(express.static('public'));
 
 /*/ Discord client setup /*/
 const client = new Client({
@@ -34,6 +35,7 @@ const COOKIE = process.env.RBX_COOKIE;
 const TOKEN = process.env.TOKEN;
 const CLIENT_ID = process.env.CLIENT_ID;
 const GUILD_ID = process.env.GUILD_ID;
+const HOSTNAME = process.env.HOSTNAME;
 
 /*/ Start the app and authenticate noblox.js /*/
 async function startApp() {
@@ -134,8 +136,8 @@ client.on("interactionCreate", async (interaction) => {
     }
 });
 
-/*/ Rank POST request handler /*/
-app.post('/rank', async (req, res) => {
+/*/ POST and GET request handlers /*/
+/*/app.post('/rank', async (req, res) => {
     const { userId, rankId } = req.body;
 
     // Log the incoming data for debugging
@@ -168,7 +170,15 @@ app.post('/rank', async (req, res) => {
         console.error('Error ranking player:', error);
         return res.status(400).json({ success: false, message: error.message || 'An unexpected error occurred.' });
     }  
-});
+});/*/
+
+app.get('/api/status', (req, res) => {
+    res.json({ message: 'API is working!', uptime: process.uptime() });
+  });
+
+app.get('/dashboard', (req, res) => {
+    res.sendFile(__dirname + '/public/index.html');
+  });
 
 /*/ Register slash commands /*/
 const commands = [
@@ -196,6 +206,7 @@ setInterval(updateUptime, 1000); // Updates every second
 // Start the server
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
+    console.log(`Website is running on http://${HOSTNAME}:${PORT}`);
 });
 
 // Log in the Discord client  
