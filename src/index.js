@@ -3,15 +3,15 @@ require('dotenv').config(); // enviorment file (DONT DEL)
 const express = require('express');
 const noblox = require("noblox.js");
 const os = require('os');
+const path = require('path'); // Use path for better file path handling
 const { Client, IntentsBitField, ActivityType, EmbedBuilder } = require("discord.js");
 const { REST } = require('@discordjs/rest'); // Import REST from @discordjs/rest
 const { Routes } = require('discord-api-types/v10'); // Import Routes from discord-api-types
-const path = require('path'); // Use path for better file path handling
 
 /*/ Express app /*/
 const app = express();
 app.use(express.json());
-app.use(express.static(path.join(__dirname, '../public')));
+app.use(express.static)
 
 /*/ Discord client setup /*/
 const client = new Client({
