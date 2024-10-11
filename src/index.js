@@ -178,11 +178,11 @@ app.get('/api/status', (req, res) => {
   });
 
   app.get('/api', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/index.html'));
+    res.sendFile(path.join(__dirname, '../public/pages/api_index.html'));
   });
 
 app.get('/home', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/index.html'));
+    res.sendFile(path.join(__dirname, '../public/pages/index.html'));
   });
   
 /*/ Register slash commands /*/
