@@ -206,7 +206,7 @@ setInterval(updateUptime, 1000); // Updates every second
 // Start the server
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
-    console.log(`Website is running on http://${HOSTNAME}:${PORT}`);
+    console.log(`Website is running on http://${HOSTNAME}:${port}`);
 });
 
 // Log in the Discord client  
