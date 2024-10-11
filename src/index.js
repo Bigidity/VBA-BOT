@@ -177,7 +177,7 @@ app.get('/api/status', (req, res) => {
     res.json({ message: 'API is working!', uptime: process.uptime() });
   });
 
-app.get('/', (req, res) => {
+app.get('/home', (req, res) => {
     res.sendFile(path.join(__dirname, '../public/index.html'));
   });
   
