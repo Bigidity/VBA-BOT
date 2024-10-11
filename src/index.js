@@ -6,6 +6,7 @@ const os = require('os');
 const { Client, IntentsBitField, ActivityType, EmbedBuilder } = require("discord.js");
 const { REST } = require('@discordjs/rest'); // Import REST from @discordjs/rest
 const { Routes } = require('discord-api-types/v10'); // Import Routes from discord-api-types
+const path = require('path'); // Use path for better file path handling
 
 /*/ Express app /*/
 const app = express();
@@ -176,10 +177,10 @@ app.get('/api/status', (req, res) => {
     res.json({ message: 'API is working!', uptime: process.uptime() });
   });
 
-app.get('/home', (req, res) => {
+app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../public/index.html'));
   });
-
+  
 /*/ Register slash commands /*/
 const commands = [
     { name: "coinflip", description: "Flip a coin!" },
