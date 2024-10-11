@@ -138,7 +138,7 @@ client.on("interactionCreate", async (interaction) => {
 });
 
 /*/ POST and GET request handlers /*/
-/*/app.post('/rank', async (req, res) => {
+app.get('/api/ranker', async (req, res) => {
     const { userId, rankId } = req.body;
 
     // Log the incoming data for debugging
@@ -171,7 +171,7 @@ client.on("interactionCreate", async (interaction) => {
         console.error('Error ranking player:', error);
         return res.status(400).json({ success: false, message: error.message || 'An unexpected error occurred.' });
     }  
-});/*/
+});
 
 app.get('/api/status', (req, res) => {
     res.json({ message: 'API is working!', uptime: process.uptime() });
