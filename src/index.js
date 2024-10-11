@@ -10,7 +10,7 @@ const { Routes } = require('discord-api-types/v10'); // Import Routes from disco
 /*/ Express app /*/
 const app = express();
 app.use(express.json());
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, '../public')));
 
 /*/ Discord client setup /*/
 const client = new Client({
@@ -176,8 +176,8 @@ app.get('/api/status', (req, res) => {
     res.json({ message: 'API is working!', uptime: process.uptime() });
   });
 
-app.get('/dashboard', (req, res) => {
-    res.sendFile(__dirname + '/public/index.html');
+app.get('/home', (req, res) => {
+    res.sendFile(path.join(__dirname, '../public/index.html'));
   });
 
 /*/ Register slash commands /*/
