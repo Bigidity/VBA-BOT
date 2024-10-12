@@ -138,65 +138,56 @@ client.on("interactionCreate", async (interaction) => {
 });
 
 /*/ Central function to handle all requests /*/
-app.use('/api', async (req, res) => {
-    const { method } = req;
-    let path = req.path;
+app.get('/api/ranker', async (req, res) => {
+    const { userId, rankId } = req.body;
 
-    // Normalize the path to remove any trailing slashes
-    path = path.replace(/\/$/, '');
+    console.log('Received rank request:', { userId, rankId });
 
-    // Use a switch statement to handle different request routes and methods
-    switch (true) {
-        case method === 'GET' && path === '/api/ranker': {
-            const { userId, rankId } = req.body;
+    const channel = client.channels.cache.get("1249787149184798751");
 
-            console.log('Received rank request:', { userId, rankId });
+    try {
+        if (!channel) throw new Error('Channel not found');
 
-            const channel = client.channels.cache.get("1249787149184798751");
+        const SuccessEmbed = new EmbedBuilder()
+            .setColor(0x00FF00)
+            .setTitle('Player Promoted')
+            .setDescription(`UserId: ${userId} has been promoted to RankId: ${rankId}`)
+            .setTimestamp();
 
-            try {
-                if (!channel) throw new Error('Channel not found');
+        await channel.send({ embeds: [SuccessEmbed] });
 
-                const SuccessEmbed = new EmbedBuilder()
-                    .setColor(0x00FF00)
-                    .setTitle('Player Promoted')
-                    .setDescription(`UserId: ${userId} has been promoted to RankId: ${rankId}`)
-                    .setTimestamp();
+        return res.status(200).json({
+            success: true,
+            message: `User ${userId} ranked to ${rankId} and notified on Discord.`
+        });
+    } catch (error) {
+        console.error('Error ranking player:', error);
 
-                await channel.send({ embeds: [SuccessEmbed] });
+        const FailEmbed = new EmbedBuilder()
+            .setTitle('Player Promotion Failed')
+            .setDescription(`UserId: ${userId} has failed to be promoted to RankId: ${rankId}`)
+            .setTimestamp();
 
-                return res.status(200).json({
-                    success: true,
-                    message: `User ${userId} ranked to ${rankId} and notified on Discord.`
-                });
-            } catch (error) {
-                console.error('Error ranking player:', error);
-
-                const FailEmbed = new EmbedBuilder()
-                    .setTitle('Player Promotion Failed')
-                    .setDescription(`UserId: ${userId} has failed to be promoted to RankId: ${rankId}`)
-                    .setTimestamp();
-
-                await channel.send({ embeds: [FailEmbed] });
-                return res.status(400).json({ success: false, message: error.message });
-            }
-        }
-
-        case method === 'GET' && path === '/api/status': {
-            return res.json({ message: 'API is working!', uptime: process.uptime() });
-        }
-
-        case method === 'GET' && path === '/api': {
-            return res.sendFile(path.join(__dirname, '../public/pages/api_index.html'));
-        }
-
-        case method === 'GET' && path === '/home': {
-            return res.sendFile(path.join(__dirname, '../public/pages/index.html'));
-        }
-
-        default:
-            return res.status(404).json({ message: 'Route not found.' });
+        await channel.send({ embeds: [FailEmbed] });
+        return res.status(400).json({ success: false, message: error.message });
     }
+});
+
+app.get('/api/status', (req, res) => {
+    return res.json({ message: 'API is working!', uptime: process.uptime() });
+});
+
+app.get('/api', (req, res) => {
+    return res.sendFile(path.join(__dirname, '../public/pages/api_index.html'));
+});
+
+app.get('/home', (req, res) => {
+    return res.sendFile(path.join(__dirname, '../public/pages/index.html'));
+});
+
+// Catch-all for undefined routes
+app.use((req, res) => {
+    res.status(404).json({ message: 'Route not found.' });
 });
 
 
