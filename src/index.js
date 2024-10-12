@@ -138,16 +138,33 @@ client.on("interactionCreate", async (interaction) => {
 });
 
 /*/ Central function to handle all requests /*/
-app.get('/api/ranker', async (req, res) => {
+app.post('/api/ranker', async (req, res) => { // POST for modifying data
     const { userId, rankId } = req.body;
 
     console.log('Received rank request:', { userId, rankId });
 
-    const channel = client.channels.cache.get("1249787149184798751");
+    const channel = client.channels.cache.get("1249787149184798751"); // Discord channel ID for sending embeds
 
     try {
-        if (!channel) throw new Error('Channel not found');
+        // Check if userId or rankId are missing/undefined
+        if (!userId || !rankId) {
+            throw new Error('userId or rankId is missing or undefined');
+        }
 
+        if (!channel) throw new Error('Discord channel not found');
+
+        // Attempt to rank the player using noblox.js
+
+        // Check if user is in the group
+        const isInGroup = await noblox.getRankInGroup(GROUPID, userId);
+        if (isInGroup === 0) {
+            throw new Error(`User ${userId} is not in the group.`);
+        }
+
+        // Try to change the rank
+        await noblox.setRank(GROUPID, userId, rankId); // Attempt to set the rank
+
+        // Success embed
         const SuccessEmbed = new EmbedBuilder()
             .setColor(0x00FF00)
             .setTitle('Player Promoted')
@@ -163,15 +180,24 @@ app.get('/api/ranker', async (req, res) => {
     } catch (error) {
         console.error('Error ranking player:', error);
 
+        // Fail embed
         const FailEmbed = new EmbedBuilder()
+            .setColor(0xFF0000) // Red for failure
             .setTitle('Player Promotion Failed')
-            .setDescription(`UserId: ${userId} has failed to be promoted to RankId: ${rankId}`)
+            .setDescription(`Failed to promote UserId: ${userId} to RankId: ${rankId}. Error: ${error.message}`)
             .setTimestamp();
 
-        await channel.send({ embeds: [FailEmbed] });
-        return res.status(400).json({ success: false, message: error.message });
+        if (channel) {
+            await channel.send({ embeds: [FailEmbed] });
+        }
+
+        return res.status(400).json({
+            success: false,
+            message: error.message
+        });
     }
 });
+
 
 app.get('/api/status', (req, res) => {
     return res.json({ message: 'API is working!', uptime: process.uptime() });
