@@ -139,7 +139,11 @@ client.on("interactionCreate", async (interaction) => {
 
 /*/ Central function to handle all requests /*/
 app.use('/api', async (req, res) => {
-    const { method, path } = req;
+    const { method } = req;
+    let path = req.path;
+
+    // Normalize the path to remove any trailing slashes
+    path = path.replace(/\/$/, '');
 
     // Use a switch statement to handle different request routes and methods
     switch (true) {
@@ -194,6 +198,7 @@ app.use('/api', async (req, res) => {
             return res.status(404).json({ message: 'Route not found.' });
     }
 });
+
 
 /*/ Register slash commands /*/
 const commands = [
