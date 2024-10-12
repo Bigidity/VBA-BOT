@@ -137,54 +137,64 @@ client.on("interactionCreate", async (interaction) => {
     }
 });
 
-/*/ POST and GET request handlers /*/
-app.get('/api/ranker', async (req, res) => {
-    const { userId, rankId } = req.body;
+/*/ Central function to handle all requests /*/
+app.use('/api', async (req, res) => {
+    const { method, path } = req;
 
-    // Log the incoming data for debugging
-    console.log('Received rank request:', { userId, rankId });
+    // Use a switch statement to handle different request routes and methods
+    switch (true) {
+        case method === 'GET' && path === '/api/ranker': {
+            const { userId, rankId } = req.body;
 
-    const channel = client.channels.cache.get("1249787149184798751");
+            console.log('Received rank request:', { userId, rankId });
 
-    try {
-        if (!channel) throw new Error('Channel not found');
+            const channel = client.channels.cache.get("1249787149184798751");
 
-        const SuccesEmbed = new EmbedBuilder()
-            .setColor(0x00FF00)
-            .setTitle('Player Promoted')
-            .setDescription(`UserId: ${userId} has been promoted to RankId: ${rankId}`)
-            .setTimestamp();
+            try {
+                if (!channel) throw new Error('Channel not found');
 
-        await channel.send({ embeds: [SuccesEmbed] });
-        return res.status(200).json({
-            success: true,
-            message: `User ${userId} ranked to ${rankId} and notified on Discord.`
-        });
-    } catch (error) {
-        console.error('Error ranking player:', error);
-        const FailEmbed = new EmbedBuilder()
-            .setTitle('Player Promotion Failed')
-            .setDescription(`UserId: ${userId} has failed to be promoted to RankId: ${rankId}`)
-            .setTimestamp();
+                const SuccessEmbed = new EmbedBuilder()
+                    .setColor(0x00FF00)
+                    .setTitle('Player Promoted')
+                    .setDescription(`UserId: ${userId} has been promoted to RankId: ${rankId}`)
+                    .setTimestamp();
 
-        await channel.send({ embeds: [FailEmbed] });
-        console.error('Error ranking player:', error);
-        return res.status(400).json({ success: false, message: error.message || 'An unexpected error occurred.' });
-    }  
+                await channel.send({ embeds: [SuccessEmbed] });
+
+                return res.status(200).json({
+                    success: true,
+                    message: `User ${userId} ranked to ${rankId} and notified on Discord.`
+                });
+            } catch (error) {
+                console.error('Error ranking player:', error);
+
+                const FailEmbed = new EmbedBuilder()
+                    .setTitle('Player Promotion Failed')
+                    .setDescription(`UserId: ${userId} has failed to be promoted to RankId: ${rankId}`)
+                    .setTimestamp();
+
+                await channel.send({ embeds: [FailEmbed] });
+                return res.status(400).json({ success: false, message: error.message });
+            }
+        }
+
+        case method === 'GET' && path === '/api/status': {
+            return res.json({ message: 'API is working!', uptime: process.uptime() });
+        }
+
+        case method === 'GET' && path === '/api': {
+            return res.sendFile(path.join(__dirname, '../public/pages/api_index.html'));
+        }
+
+        case method === 'GET' && path === '/home': {
+            return res.sendFile(path.join(__dirname, '../public/pages/index.html'));
+        }
+
+        default:
+            return res.status(404).json({ message: 'Route not found.' });
+    }
 });
 
-app.get('/api/status', (req, res) => {
-    res.json({ message: 'API is working!', uptime: process.uptime() });
-  });
-
-  app.get('/api', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/pages/api_index.html'));
-  });
-
-app.get('/home', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/pages/index.html'));
-  });
-  
 /*/ Register slash commands /*/
 const commands = [
     { name: "coinflip", description: "Flip a coin!" },
