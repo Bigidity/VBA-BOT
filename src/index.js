@@ -28,7 +28,6 @@ const client = new Client({
 /*/ vars /*/
 const version = "1.7.0";
 const serverStartTime = Date.now();
-const XCSRF = await noblox.getGeneralToken()
 let uptime = { y: 0, mo: 0, d: 0, h: 0, m: 0, s: 0 };
 
 /*/ Environment variables /*/
@@ -163,9 +162,12 @@ app.post('/api/ranker', async (req, res) => { // POST for modifying data
             throw new Error(`User ${userId} is not in the group.`);
         }
 
+        // Retrieve the CSRF token
+        const csrfToken = await noblox.getGeneralToken(jar);
+
         // Try to change the rank
         console.log(GROUPID, userId, rankId);
-        await noblox.setRank(XCSRF,GROUPID, userId, rankId);
+        await noblox.setRank(xcsrfToken,GROUPID, userId, rankId);
 
         // Success embed
         const SuccessEmbed = new EmbedBuilder()
