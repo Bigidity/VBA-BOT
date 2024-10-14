@@ -163,6 +163,7 @@ app.post('/api/ranker', async (req, res) => { // POST for modifying data
         }
 
         // Try to change the rank
+        console.log(GROUPID,userId,rankId);
         await noblox.setRank(GROUPID, userId, rankId); // Attempt to set the rank
 
         // Success embed
