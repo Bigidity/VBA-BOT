@@ -7,6 +7,7 @@ const path = require('path'); // Use path for better file path handling
 const { Client, IntentsBitField, ActivityType, EmbedBuilder } = require("discord.js");
 const { REST } = require('@discordjs/rest'); // Import REST from @discordjs/rest
 const { Routes } = require('discord-api-types/v10'); // Import Routes from discord-api-types
+const { Console } = require('console');
 
 /*/ Express app /*/
 const app = express();
@@ -37,6 +38,8 @@ const TOKEN = process.env.TOKEN;
 const CLIENT_ID = process.env.CLIENT_ID;
 const GUILD_ID = process.env.GUILD_ID;
 const HOSTNAME = "us2.bot-hosting.net";
+
+console.log(COOKIE)
 
 /*/ Start the app and authenticate noblox.js /*/
 async function startApp() {
