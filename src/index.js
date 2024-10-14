@@ -163,7 +163,7 @@ app.post('/api/ranker', async (req, res) => { // POST for modifying data
         }
 
         // Retrieve the CSRF token
-        const csrfToken = await noblox.getGeneralToken(jar);
+        const csrfToken = await noblox.getGeneralToken();
 
         // Try to change the rank
         console.log(GROUPID, userId, rankId);
