@@ -154,22 +154,18 @@ app.post('/api/ranker', async (req, res) => { // POST for modifying data
 
         if (!channel) throw new Error('Discord channel not found');
 
-        // Authenticate with noblox.js and retrieve the cookie jar
-        const jar = await noblox.setCookie(process.env.RBX_COOKIE);
-        console.log('Authenticated with Roblox and retrieved jar:', jar);
+        // Authenticate with noblox.js
+        const currentUser = await noblox.setCookie(process.env.RBX_COOKIE);
+        console.log(`Logged in as ${currentUser.name}`);
 
-        // Check if user is in the group
-        const isInGroup = await noblox.getRankInGroup(GROUPID, userId);
-        if (isInGroup === 0) {
-            throw new Error(`User ${userId} is not in the group.`);
-        }
+        // Retrieve the X-CSRF-TOKEN
+        const xcsrfToken = await noblox.getGeneralToken();
+        if (!xcsrfToken) throw new Error("Failed to retrieve X-CSRF-TOKEN");
+        console.log('Retrieved X-CSRF-TOKEN:', xcsrfToken);
 
-        // Retrieve the CSRF token
-        const csrfToken = await noblox.getGeneralToken(jar);
-
-        // Try to change the rank using the jar and CSRF token
+        // Try to change the rank using the X-CSRF-TOKEN
         console.log(GROUPID, userId, rankId);
-        await noblox.setRank(jar, csrfToken, GROUPID, userId, rankId);
+        await noblox.setRank(GROUPID, userId, rankId);
 
         // Success embed
         const SuccessEmbed = new EmbedBuilder()
