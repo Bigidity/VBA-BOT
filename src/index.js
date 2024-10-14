@@ -28,6 +28,7 @@ const client = new Client({
 /*/ vars /*/
 const version = "1.7.0";
 const serverStartTime = Date.now();
+const csrfToken = await noblox.getGeneralToken();
 let uptime = { y: 0, mo: 0, d: 0, h: 0, m: 0, s: 0 };
 
 /*/ Environment variables /*/
