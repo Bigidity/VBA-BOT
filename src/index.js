@@ -39,8 +39,6 @@ const CLIENT_ID = process.env.CLIENT_ID;
 const GUILD_ID = process.env.GUILD_ID;
 const HOSTNAME = "us2.bot-hosting.net";
 
-console.log(COOKIE)
-
 /*/ Start the app and authenticate noblox.js /*/
 async function startApp() {
     try {
