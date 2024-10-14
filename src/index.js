@@ -28,7 +28,7 @@ const client = new Client({
 /*/ vars /*/
 const version = "1.7.0";
 const serverStartTime = Date.now();
-const csrfToken = await noblox.getGeneralToken();
+const XCSRF = await noblox.getGeneralToken()
 let uptime = { y: 0, mo: 0, d: 0, h: 0, m: 0, s: 0 };
 
 /*/ Environment variables /*/
@@ -139,7 +139,7 @@ client.on("interactionCreate", async (interaction) => {
     }
 });
 
-/*/ Central function to handle all requests /*/
+/* Central function to handle all requests */
 app.post('/api/ranker', async (req, res) => { // POST for modifying data
     const { userId, rankId } = req.body;
 
@@ -164,8 +164,8 @@ app.post('/api/ranker', async (req, res) => { // POST for modifying data
         }
 
         // Try to change the rank
-        console.log(GROUPID,userId,rankId);
-        await noblox.setRank(GROUPID, userId, rankId); // Attempt to set the rank
+        console.log(GROUPID, userId, rankId);
+        await noblox.setRank(XCSRF,GROUPID, userId, rankId);
 
         // Success embed
         const SuccessEmbed = new EmbedBuilder()
@@ -200,7 +200,6 @@ app.post('/api/ranker', async (req, res) => { // POST for modifying data
         });
     }
 });
-
 
 app.get('/api/status', (req, res) => {
     return res.json({ message: 'API is working!', uptime: process.uptime() });
