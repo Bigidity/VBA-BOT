@@ -11,7 +11,6 @@ const { Routes } = require('discord-api-types/v10'); // Import Routes from disco
 const { Console } = require('console');
 
 /*CUSTOM MODULES*/
-const uptimeModule = require(path.join(__dirname, 'events', 'updateUptime.js'));
 
 /*/ Express app /*/
 const app = express();
@@ -54,7 +53,7 @@ async function startApp() {
     }
 }
 
-/*/ Function to calculate the actual uptime
+/*/ Function to calculate the actual uptime /*/
 function updateUptime() {
     const now = Date.now();
     const uptimeMs = now - serverStartTime; // Get uptime in milliseconds
@@ -73,7 +72,7 @@ function updateUptime() {
     uptime.d = Math.floor(totalDays % 30.42); // Remaining days after months
     uptime.mo = totalMonths % 12; // Remaining months after years
     uptime.y = totalYears;
-}/*/
+}
 
 /*/ Get a string with the formatted uptime /*/
 function getUptimeString() {
@@ -273,9 +272,7 @@ const rest = new REST({ version: "10" }).setToken(TOKEN);
 })();
 
 /*/ Init /*/
-setInterval(() => {
-    uptime = modules.execute(uptimeModule(serverStartTime, uptime)); // Update uptime variable with the returned value
-}, 1000); // Updates every second
+setInterval(updateUptime, 1000); // Updates every second
 
 /*/ Start /*/
 
