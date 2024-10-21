@@ -245,21 +245,22 @@ app.use((req, res) => {
 });
 
 
-/*/ Register slash commands /*/
+/* Register slash commands */
 const commands = [];
 
 // Push command data from each file into the commands array
 for (const file of commandFiles) {
     const command = require(path.join(commandsPath, file));
 
-    // Ensure the command file has name, description, and if present, options
+    // Ensure the command file has name, description, and options
     commands.push({
         name: command.name,
         description: command.description,
-        options: command.options || []
+        options: command.options || [] // This should be included in the same command object
     });
 }
 
+// Create an instance of REST and register commands
 const rest = new REST({ version: "10" }).setToken(TOKEN);
 (async () => {
     try {
