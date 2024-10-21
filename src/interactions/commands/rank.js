@@ -11,13 +11,11 @@ module.exports = {
             name: 'roblox-user',
             type: 1,
             description: 'The user to rank',
-            required: true,
         },
         {
             name: 'rank-name',
             type: 1,
             description: 'The rank to assign',
-            required: true,
         }
     ],
     execute(interaction) { 
