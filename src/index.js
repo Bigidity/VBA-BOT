@@ -221,9 +221,33 @@ app.use((req, res) => {
 
 /*/ Register slash commands /*/
 const commands = [
-    { name: "coinflip", description: "Flip a coin!" },
-    { name: "version", description: "Gives the current version I'm running on!" }
-];   
+    { 
+        name: "coinflip", 
+        description: "Flip a coin!" 
+    },
+    { 
+        name: "version", 
+        description: "Gives the current version I'm running on!" 
+    },
+    { 
+        name: "rank", 
+        description: "Ranks a player",
+        options: [
+            { 
+                type: 'STRING',
+                name: 'player',
+                description: 'The player you want to rank',
+                required: true
+            },
+            {
+                type: 'INTEGER',
+                name: 'rank',
+                description: 'The rank you want to assign to the player',
+                required: true
+            }
+        ]
+    }
+];  
 
 const rest = new REST({ version: "10" }).setToken(TOKEN);
 
