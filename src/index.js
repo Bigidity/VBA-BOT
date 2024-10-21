@@ -3,6 +3,7 @@ require('dotenv').config(); // enviorment file (DONT DEL)
 const express = require('express');
 const noblox = require("noblox.js");
 const os = require('os');
+const fs = require('fs');
 const path = require('path'); // Use path for better file path handling
 const { Client, IntentsBitField, ActivityType, EmbedBuilder } = require("discord.js");
 const { REST } = require('@discordjs/rest'); // Import REST from @discordjs/rest
@@ -106,37 +107,60 @@ client.on("ready", (c) => {
     }, 10000);
 });
 
-/*/ interaction handler /*/
+/*START INTERACTION HANDLER*/
+
+// Create collections for commands and buttons
+client.commands = new Map();
+client.buttons = new Map();
+
+// Load command files from ./interactions/commands
+const commandsPath = path.join(__dirname, 'interactions/commands');
+const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+
+for (const file of commandFiles) {
+    const command = require(path.join(commandsPath, file));
+    client.commands.set(command.name, command);
+}
+
+// Load button files from ./interactions/buttons
+const buttonsPath = path.join(__dirname, 'interactions/buttons');
+const buttonFiles = fs.readdirSync(buttonsPath).filter(file => file.endsWith('.js'));
+
+for (const file of buttonFiles) {
+    const button = require(path.join(buttonsPath, file));
+    client.buttons.set(button.name, button);
+}
+
+/* Interaction handler */
 client.on("interactionCreate", async (interaction) => {
     // Handle chat input commands (slash commands)
     if (interaction.isChatInputCommand()) {
-        switch (interaction.commandName) {
-            case "coinflip":
-                const result = Math.ceil(Math.random() * 2);
-                const headOrTails = result === 1 ? "Tails" : "Heads";
-                return interaction.reply({ content: `You flipped ${headOrTails}!`, ephemeral: false });
-            
-            case "version":
-                return interaction.reply({ content: `I am running on ${version}!`, ephemeral: false });
+        const command = client.commands.get(interaction.commandName);
+        if (!command) return interaction.reply({ content: "Unknown command.", ephemeral: true });
 
-            default:
-                return interaction.reply({ content: "Unknown command.", ephemeral: true });
+        try {
+            await command.execute(interaction);
+        } catch (error) {
+            console.error(error);
+            return interaction.reply({ content: "There was an error executing this command.", ephemeral: true });
         }
     }
 
     // Handle button interactions
     if (interaction.isButton()) {
-        switch (interaction.customId) {
-            case "delete-reply-bot-notif-ranking":
-                await interaction.reply({ content: "Deleted Reply", ephemeral: true });
-                await interaction.message.delete();
-                break;
+        const button = client.buttons.get(interaction.customId);
+        if (!button) return interaction.reply({ content: "Unknown button action.", ephemeral: true });
 
-            default:
-                await interaction.reply({ content: "Unknown button action.", ephemeral: true });
+        try {
+            await button.execute(interaction);
+        } catch (error) {
+            console.error(error);
+            return interaction.reply({ content: "There was an error processing this button interaction.", ephemeral: true });
         }
     }
 });
+
+/*END INTERACTION HANDLER*/
 
 /* Central function to handle all requests */
 app.post('/api/ranker', async (req, res) => { // POST for modifying data
