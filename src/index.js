@@ -272,7 +272,7 @@ const rest = new REST({ version: "10" }).setToken(TOKEN);
 })();
 
 /*/ Init /*/
-setInterval(updateUptime, 1000); // Updates every second
+setInterval(updateUptime(), 1000); // Updates every second
 
 /*/ Start /*/
 
