@@ -244,37 +244,21 @@ app.use((req, res) => {
 
 
 /*/ Register slash commands /*/
-const commands = [
-    { 
-        name: "coinflip", 
-        description: "Flip a coin!" 
-    },
-    { 
-        name: "version", 
-        description: "Gives the current version I'm running on!" 
-    },
-    { 
-        name: "rank", 
-        description: "Ranks a player",
-        options: [
-            { 
-                type: 'STRING',
-                name: 'player',
-                description: 'The player you want to rank',
-                required: true
-            },
-            {
-                type: 'INTEGER',
-                name: 'rank',
-                description: 'The rank you want to assign to the player',
-                required: true
-            }
-        ]
-    }
-];  
+const commands = [];
+
+// Push command data from each file into the commands array
+for (const file of commandFiles) {
+    const command = require(path.join(commandsPath, file));
+
+    // Ensure the command file has name, description, and if present, options
+    commands.push({
+        name: command.name,
+        description: command.description,
+        options: command.options || []
+    });
+}
 
 const rest = new REST({ version: "10" }).setToken(TOKEN);
-
 (async () => {
     try {
         console.log("Registering slash commands...");
