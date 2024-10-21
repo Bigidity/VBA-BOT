@@ -10,6 +10,9 @@ const { REST } = require('@discordjs/rest'); // Import REST from @discordjs/rest
 const { Routes } = require('discord-api-types/v10'); // Import Routes from discord-api-types
 const { Console } = require('console');
 
+/*CUSTOM MODULES*/
+const uptimeModule = require(path.join(__dirname, 'events', 'updateUptime.js'));
+
 /*/ Express app /*/
 const app = express();
 app.use(express.json());
@@ -27,7 +30,6 @@ const client = new Client({
 });
 
 /*/ vars /*/
-const version = "1.7.0";
 const serverStartTime = Date.now();
 let uptime = { y: 0, mo: 0, d: 0, h: 0, m: 0, s: 0 };
 
@@ -39,6 +41,7 @@ const TOKEN = process.env.TOKEN;
 const CLIENT_ID = process.env.CLIENT_ID;
 const GUILD_ID = process.env.GUILD_ID;
 const HOSTNAME = "us2.bot-hosting.net";
+const version = process.env.VERSION;
 
 /*/ Start the app and authenticate noblox.js /*/
 async function startApp() {
@@ -51,7 +54,7 @@ async function startApp() {
     }
 }
 
-/*/ Function to calculate the actual uptime /*/
+/*/ Function to calculate the actual uptime
 function updateUptime() {
     const now = Date.now();
     const uptimeMs = now - serverStartTime; // Get uptime in milliseconds
@@ -70,7 +73,7 @@ function updateUptime() {
     uptime.d = Math.floor(totalDays % 30.42); // Remaining days after months
     uptime.mo = totalMonths % 12; // Remaining months after years
     uptime.y = totalYears;
-}
+}/*/
 
 /*/ Get a string with the formatted uptime /*/
 function getUptimeString() {
@@ -270,7 +273,9 @@ const rest = new REST({ version: "10" }).setToken(TOKEN);
 })();
 
 /*/ Init /*/
-setInterval(updateUptime, 1000); // Updates every second
+setInterval(() => {
+    uptime = modules.execute(uptimeModule(serverStartTime, uptime)); // Update uptime variable with the returned value
+}, 1000); // Updates every second
 
 /*/ Start /*/
 
