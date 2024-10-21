@@ -1,3 +1,5 @@
 module.exports = {
-    console.log("TEST")
+    execute(interaction) {
+        console.log("TEST");
+    }
 }
