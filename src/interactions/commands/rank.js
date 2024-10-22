@@ -10,13 +10,13 @@ module.exports = {
     description: 'Rank a Roblox User (This is a secured action)',
     options: [
         {
-            name: 'roblox_user',
+            name: 'roblox-user',
             type: 3,
             description: 'The user to rank',
             required: true,
         },
         {
-            name: 'rank_name',
+            name: 'rank-name',
             type: 3,
             description: 'The rank to assign',
             required: true,
