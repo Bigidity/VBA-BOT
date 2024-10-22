@@ -2,7 +2,7 @@ const noblox = require("noblox.js");
 
 async function checkValidity(params) {
     // Add actual logic here to validate the params
-    return true; // Placeholder return value
+    return false;
 }
 
 module.exports = {
@@ -32,7 +32,7 @@ module.exports = {
                 return interaction.editReply({ content: "You can't rank this player! (Validity check failed)", ephemeral: true });
             }
 
-            await interaction.editReply({ content: "Player successfully ranked!", ephemeral: true });
+            await interaction.editReply({ content: "Action has been recoreded and sent for approval!", ephemeral: true });
         } catch (error) {
             console.error("Error with rank command:", error);
             await interaction.editReply({ content: "An error occurred while ranking the player.", ephemeral: true });
