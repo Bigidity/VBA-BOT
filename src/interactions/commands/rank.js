@@ -9,16 +9,18 @@ module.exports = {
     options: [
         {
             name: 'roblox-user',
-            type: 1,
+            type: 3, // String type to input the Roblox user
             description: 'The user to rank',
+            required: true, // Ensure this option is required
         },
         {
             name: 'rank-name',
-            type: 1,
+            type: 3, // String type to input the rank name
             description: 'The rank to assign',
+            required: true, // Ensure this option is required
         }
     ],
-    execute(interaction) { 
+     async execute(interaction) { 
 //        if (!checkValidity) {return;};
         interaction.reply({ content: "You cant use this!", ephemeral: true })
     }
