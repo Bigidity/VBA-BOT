@@ -8,8 +8,8 @@ module.exports = {
             const version = process.env.VERSION || "unknown version";
             await interaction.reply({ content: `I'm running on version ${version}`, ephemeral: true });
         } catch (error) {
-            console.error("Error with version command:", error);
-            await interaction.reply({ content: "An error occurred while fetching the version.", ephemeral: true });
+            console.error("Error with connect command:", error);
+            await interaction.reply({ content: "An error occurred while connecting your account.", ephemeral: true });
         }
     }
 };
