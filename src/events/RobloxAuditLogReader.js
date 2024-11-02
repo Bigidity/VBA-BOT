@@ -1,14 +1,30 @@
-const { Client, GatewayIntentBits, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const noblox = require('noblox.js');
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
 const MaxRankingsPerMinute = 5;
-const ExemptRankIds = [202120695,7256120547,7302550787];
+const ExemptRankIds = [202120695, 7256120547, 7302550787];
 const LoggedRankings = {};
 
-async function monitorAuditLogs() {
-    const groupId = process.env.GROUP_ID; // Replace with your Roblox group ID
+module.exports = {
+    async execute(client) {
+        const groupId = process.env.GROUP_ID;
+        const robloxCookie = process.env.RBX_COOKIE;
 
+        try {
+            // Log in to Noblox with the provided cookie
+            await noblox.setCookie(robloxCookie);
+            const user = await noblox.getAuthenticatedUser();
+            console.log(`Logged in to Roblox as ${user.UserName}`);
+            
+            // Schedule log monitoring every minute
+            setInterval(() => monitorAuditLogs(client, groupId), 60000);
+        } catch (error) {
+            console.error("Failed to log in to Roblox:", error);
+        }
+    }
+};
+
+async function monitorAuditLogs(client, groupId) {
     try {
         const logs = await noblox.getAuditLog({ group: groupId });
         const now = Date.now();
@@ -16,7 +32,6 @@ async function monitorAuditLogs() {
         logs.data.forEach(log => {
             const actionType = log.actionType;
             const rankerId = log.actor.userId;
-            const targetUserId = log.targetId;
 
             // Check if the action was a rank action and exclude exempt IDs
             if ((actionType === "Rank" || actionType === "Promote" || actionType === "Demote") &&
@@ -26,17 +41,14 @@ async function monitorAuditLogs() {
                 if (!LoggedRankings[rankerId]) LoggedRankings[rankerId] = [];
                 LoggedRankings[rankerId].push(now);
 
-                // Filter to only keep entries from the last minute
+                // Filter to keep only entries from the last minute
                 LoggedRankings[rankerId] = LoggedRankings[rankerId].filter(timestamp => now - timestamp < 60000);
 
                 // Check if rank limit has been exceeded
                 if (LoggedRankings[rankerId].length > MaxRankingsPerMinute) {
-                    // Perform the demotion
+                    // Demote user and send alert
                     noblox.setRank({ group: groupId, userId: rankerId, rank: 1 })
-                        .then(() => {
-                            // Alert the Discord server of suspicious activity
-                            sendSuspiciousActivityAlert(rankerId);
-                        })
+                        .then(() => sendSuspiciousActivityAlert(client, rankerId))
                         .catch(console.error);
                 }
             }
@@ -46,8 +58,8 @@ async function monitorAuditLogs() {
     }
 }
 
-// Send an alert message to Discord with rollback options
-async function sendSuspiciousActivityAlert(rankerId) {
+// Function to send an alert message to Discord with rollback options
+async function sendSuspiciousActivityAlert(client, rankerId) {
     const embed = new EmbedBuilder()
         .setTitle("Suspicious Ranking Activity Detected")
         .setDescription(`Suspicious ranking activity by user ID: ${rankerId}`)
@@ -74,7 +86,7 @@ async function sendSuspiciousActivityAlert(rankerId) {
 
         collector.on('collect', async (interaction) => {
             if (interaction.customId === 'revert') {
-                // Implement rollback logic here (DONT FORGET)
+                // Implement rollback logic here
                 await interaction.reply(`Rolling back actions for user ID: ${rankerId}`);
             } else if (interaction.customId === 'ignore') {
                 await interaction.reply("Ignoring suspicious activity.");
@@ -82,21 +94,3 @@ async function sendSuspiciousActivityAlert(rankerId) {
         });
     }
 }
-
-module.exports = {
-    async execute(client) {
-        const groupId = process.env.GROUP_ID;
-        const robloxCookie = process.env.RBX_COOKIE;
-
-        try {
-            // Log in to Noblox with the provided cookie
-            await noblox.setCookie(robloxCookie);
-            console.log(`Logged in to Roblox as ${await noblox.getCurrentUser().then(user => user.UserName)}`);
-            
-            // Schedule log monitoring every minute
-            setInterval(() => monitorAuditLogs(client, groupId), 60000);
-        } catch (error) {
-            console.error("Failed to log in to Roblox:", error);
-        }
-    }
-};
