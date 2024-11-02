@@ -33,13 +33,13 @@ module.exports = {
     ],
     async execute(interaction) {
         const user = interaction.user;
-         await interaction.reply({ content: "Processing...", ephemeral: true })
+         await interaction.reply({ content: "Processing...", ephemeral: true });
         // We start our app
         startApp()
 
         // Then we get all the need info about the Target player.
         
-
+        await interaction.editReply({ content: "You can't use this command!", ephemeral: true });
         try {
             await noblox.setRank(GROUPID, userId, rankId);
          } catch (error) {
