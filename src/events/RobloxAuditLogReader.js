@@ -12,9 +12,8 @@ module.exports = {
 
         try {
             // Log in to Noblox with the provided cookie
-            await noblox.setCookie(robloxCookie);
-            const user = await noblox.getAuthenticatedUser();
-            console.log(`Logged in to Roblox as ${user.UserName}`);
+            const currentUser = await noblox.setCookie(COOKIE);
+            console.log(`Logged in as ${currentUser.name}`);
             
             // Schedule log monitoring every minute
             setInterval(() => monitorAuditLogs(client, groupId), 60000);
