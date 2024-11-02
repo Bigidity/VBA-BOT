@@ -12,7 +12,7 @@ module.exports = {
 
         try {
             // Log in to Noblox with the provided cookie
-            const currentUser = await noblox.setCookie(COOKIE);
+            const currentUser = await noblox.setCookie(process.env.RBX_COOKIE);
             console.log(`Logged in as ${currentUser.name}`);
             
             // Schedule log monitoring every minute

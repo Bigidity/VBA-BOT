@@ -1,9 +1,18 @@
+require('dotenv').config();
+const { EmbedBuilder } = require('discord.js');
 const noblox = require("noblox.js");
 
-async function checkValidity(params) {
-    // Add actual logic here to validate the params
-    return false;
-}
+const GROUPID = process.env.GROUP_ID;
+const HQRoleId = "1237150326168096914"
+
+async function startApp() {
+    await noblox.setCookie(process.env.COOKIE);
+};
+
+async function SendHQCheck(RankerInfo,TargetInfo) {
+    const ChannelId = "1264255128505024623"
+    const HQCheckEmbed = new EmbedBuilder()
+};
 
 module.exports = {
     name: 'rank',
@@ -23,19 +32,21 @@ module.exports = {
         }
     ],
     async execute(interaction) {
-        try {
-            await interaction.reply({ content: "Processing...", ephemeral: true });
-            
-            const isValid = await checkValidity(interaction.options);
-            
-            if (!isValid) {
-                return interaction.editReply({ content: "You can't rank this player! (Validity check failed)", ephemeral: true });
-            }
+        const user = interaction.user;
+         await interaction.reply({ content: "Processing...", ephemeral: true })
+        // We start our app
+        startApp()
 
-            await interaction.editReply({ content: "Action has been recoreded and sent for approval!", ephemeral: true });
-        } catch (error) {
-            console.error("Error with rank command:", error);
-            await interaction.editReply({ content: "An error occurred while ranking the player.", ephemeral: true });
-        }
+        // Then we get all the need info about the Target player.
+        
+
+        try {
+            await noblox.setRank(GROUPID, userId, rankId);
+         } catch (error) {
+                await interaction.editReply({ content: "An error occurred while ranking the player.", ephemeral: true });
+         }
+
+         await interaction.editReply({ content: "Target player has been ranked!", ephemeral: true });
+        //await interaction.editReply({ content: "Action has been recorded and sent for approval!", ephemeral: true });
     }
 };
