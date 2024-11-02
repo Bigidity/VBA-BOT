@@ -42,11 +42,10 @@ module.exports = {
         await interaction.editReply({ content: "You can't use this command!", ephemeral: true });
         try {
             await noblox.setRank(GROUPID, userId, rankId);
+            await interaction.editReply({ content: "Target player has been ranked!", ephemeral: true });
+            //await interaction.editReply({ content: "Action has been recorded and sent for approval!", ephemeral: true });
          } catch (error) {
                 await interaction.editReply({ content: "An error occurred while ranking the player.", ephemeral: true });
          }
-
-         await interaction.editReply({ content: "Target player has been ranked!", ephemeral: true });
-        //await interaction.editReply({ content: "Action has been recorded and sent for approval!", ephemeral: true });
     }
 };
