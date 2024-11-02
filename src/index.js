@@ -98,6 +98,10 @@ function getUptimeString() {
 client.on("ready", (c) => {
     console.log(`😎👍 ${c.user.tag} is online!`);
 
+    // Execute needed events
+    const auditLogReader = require('./events/RobloxAuditLogReader'); 
+    auditLogReader.execute(client);
+
     setInterval(() => {
         const status = [
             { name: `Uptime: ${getUptimeString()}`, type: ActivityType.Watching },

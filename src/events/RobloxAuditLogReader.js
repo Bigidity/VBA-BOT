@@ -83,10 +83,20 @@ async function sendSuspiciousActivityAlert(rankerId) {
     }
 }
 
-client.once('ready', () => {
-    console.log(`Logged in as ${client.user.tag}`);
-    console.log("ROBLOX AUDIT LOG READER ON")
-    setInterval(monitorAuditLogs, 60000); // Check audit logs every minute
-});
+module.exports = {
+    async execute(client) {
+        const groupId = process.env.GROUP_ID;
+        const robloxCookie = process.env.RBX_COOKIE;
 
-client.login(process.env.TOKEN); // Replace with your bot token
+        try {
+            // Log in to Noblox with the provided cookie
+            await noblox.setCookie(robloxCookie);
+            console.log(`Logged in to Roblox as ${await noblox.getCurrentUser().then(user => user.UserName)}`);
+            
+            // Schedule log monitoring every minute
+            setInterval(() => monitorAuditLogs(client, groupId), 60000);
+        } catch (error) {
+            console.error("Failed to log in to Roblox:", error);
+        }
+    }
+};
