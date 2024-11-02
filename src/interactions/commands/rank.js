@@ -6,7 +6,7 @@ const GROUPID = process.env.GROUP_ID;
 const HQRoleId = "1237150326168096914"
 
 async function startApp() {
-    await noblox.setCookie(process.env.COOKIE);
+    await noblox.setCookie(process.env.RBX_COOKIE);
 };
 
 async function SendHQCheck(RankerInfo,TargetInfo) {
