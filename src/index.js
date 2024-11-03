@@ -33,7 +33,7 @@ const client = new Client({
 });
 
 const redisClient = createClient ({
-    url : `rediss://default:${RD_TOKEN}@thankful-wallaby-25037.upstash.io:6379`
+    url : `rediss://default:${process.env.RD_TOKEN}@thankful-wallaby-25037.upstash.io:6379`
   });
 
 /*/ vars /*/
