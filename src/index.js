@@ -2,7 +2,6 @@
 require('dotenv').config(); // enviorment file (DONT DEL)
 const express = require('express');
 const noblox = require("noblox.js");
-const mongoose = require('mongoose');
 const os = require('os');
 const fs = require('fs');
 const now = require('performance-now');
@@ -11,10 +10,11 @@ const { Client, IntentsBitField, ActivityType, EmbedBuilder, User } = require("d
 const { REST } = require('@discordjs/rest'); // Import REST from @discordjs/rest
 const { Routes } = require('discord-api-types/v10'); // Import Routes from discord-api-types
 const { Console } = require('console');
+const { createClient } = require("redis");
 
 /*CUSTOM MODULES*/
 
-const rankHandler = require('./api_responds/_api_ranker');
+const rankHandler = require('./api/_api_ranker');
 
 /*/ Express app /*/
 const app = express();
@@ -31,6 +31,10 @@ const client = new Client({
         IntentsBitField.Flags.GuildEmojisAndStickers
     ]
 });
+
+const redisClient = createClient ({
+    url : `rediss://default:${RD_TOKEN}@thankful-wallaby-25037.upstash.io:6379`
+  });
 
 /*/ vars /*/
 const serverStartTime = Date.now();
@@ -116,6 +120,10 @@ client.on("ready", (c) => {
         client.user.setActivity(status[random]);
     }, 10000);
 });
+
+redisClient.on("error", function(err) {
+    throw err;
+  });
 
 /*START INTERACTION HANDLER*/
 
@@ -227,12 +235,6 @@ setInterval(updateUptime, 1000); // Updates every second
 /*/ Start /*/
 
 // Start the server
-// mongodb+srv://sennevangerven214:Senne09v@cluster0.mongodb.net/?retryWrites=true&w=majority
-
-mongoose.connect('mongodb+srv://sennevangerven214:Senne09v@cluster0.mongodb.net/?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log("Connected to MongoDB"))
-    .catch(error => console.error("MongoDB connection error:", error));
-    
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
     console.log(`Website is running on http://${HOSTNAME}:${port}`);
@@ -240,6 +242,7 @@ app.listen(port, () => {
 
 // Log in the Discord client  
 client.login(TOKEN);
-
+redisClient.connect()
+redisClient.set('foo','bar');
 // Start noblox app
 startApp();
