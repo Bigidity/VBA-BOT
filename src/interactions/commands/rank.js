@@ -1,7 +1,7 @@
 require('dotenv').config();
 const { SlashCommandBuilder, EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder } = require('discord.js');
 const path = require('path');
-const { GetKeyContents, SetDataToKey, SetHashField, GetHashField } =  require(path.join(__dirname, '../events/UpstashRedisHandler.js'));
+const { GetKeyContents, SetDataToKey, SetHashField, GetHashField } =  require(path.join(__dirname, '.../events/UpstashRedisHandler.js'));
 const noblox = require("noblox.js");
 
 const GROUPID = process.env.GROUP_ID;
