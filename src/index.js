@@ -9,8 +9,6 @@ const path = require('path'); // Use path for better file path handling
 const { Client, IntentsBitField, ActivityType, EmbedBuilder, User } = require("discord.js");
 const { REST } = require('@discordjs/rest'); // Import REST from @discordjs/rest
 const { Routes } = require('discord-api-types/v10'); // Import Routes from discord-api-types
-const { Console } = require('console');
-const { createClient } = require("redis");
 
 /*CUSTOM MODULES*/
 
@@ -31,10 +29,6 @@ const client = new Client({
         IntentsBitField.Flags.GuildEmojisAndStickers
     ]
 });
-
-const redisClient = createClient ({
-    url : `rediss://default:${process.env.RD_TOKEN}@thankful-wallaby-25037.upstash.io:6379`
-  });
 
 /*/ vars /*/
 const serverStartTime = Date.now();
@@ -120,10 +114,6 @@ client.on("ready", (c) => {
         client.user.setActivity(status[random]);
     }, 10000);
 });
-
-redisClient.on("error", function(err) {
-    throw err;
-  });
 
 /*START INTERACTION HANDLER*/
 
@@ -242,7 +232,5 @@ app.listen(port, () => {
 
 // Log in the Discord client  
 client.login(TOKEN);
-redisClient.connect()
-redisClient.set('foo','bar');
 // Start noblox app
 startApp();
