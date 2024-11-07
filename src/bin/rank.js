@@ -6,16 +6,16 @@ const { GetKeyContents, SetDataToKey, SetHashField, GetHashField } = require(pat
 const noblox = require("noblox.js");
 
 const GROUPID = process.env.GROUP_ID;
-const CHANNEL_ID = "1264255128505024623"; // Channel where the embed will be sent
+const CHANNEL_ID = "undefined"; // Channel where the embed will be sent
 
 // Define command permissions for /rank command
 const commandPermissions = {
-    "1292450315034951751": "Ranker Role 1", // Replace with actual role IDs
+    "undefined": "Ranker Role 1", // Replace with actual role IDs
 };
 
 // Define approval permissions for Accept/Deny actions
 const approvalPermissions = {
-    "1237150326168096914": "Approver Role 1",
+    "undefined": "Approver Role 1",
 };
 
 // Define the rank map

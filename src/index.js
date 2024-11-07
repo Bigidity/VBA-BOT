@@ -41,7 +41,7 @@ const COOKIE = process.env.RBX_COOKIE;
 const TOKEN = process.env.TOKEN;
 const CLIENT_ID = process.env.CLIENT_ID;
 const GUILD_ID = process.env.GUILD_ID;
-const HOSTNAME = "us2.bot-hosting.net";
+const HOSTNAME = "undifined";
 const version = process.env.VERSION;
 
 /*/ Start the app and authenticate noblox.js /*/

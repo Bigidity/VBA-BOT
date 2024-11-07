@@ -2,7 +2,7 @@ require('dotenv').config();
 const { createClient } = require("redis");
 
 const client = createClient ({
-    url : `rediss://default:${process.env.RD_TOKEN}@thankful-wallaby-25037.upstash.io:6379`
+    url : `rediss://default:${process.env.RD_TOKEN}@REDACTED`
 });
 
 async function GetKeyContents(key) {

@@ -6,7 +6,7 @@ module.exports = async (req, res, client, GROUPID) => {
     const { userId, rankId } = req.body;
     console.log('Received rank request:', { userId, rankId });
 
-    const channel = client.channels.cache.get("1249787149184798751"); // Discord channel ID
+    const channel = client.channels.cache.get("undefined"); // Discord channel ID
 
     const startTime = now(); // Start timing here
 

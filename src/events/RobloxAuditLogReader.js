@@ -2,7 +2,7 @@ const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('
 const noblox = require('noblox.js');
 
 const MaxRankingsPerMinute = 5;
-const ExemptRankIds = [202120695, 7256120547, 7302550787];
+const ExemptRankIds = ["UNDEFINED, UNDEFINED, UNDEFINED"];
 const LoggedRankings = {};
 const RecentRankChanges = {}; // Store recent rank changes for potential rollback
 
